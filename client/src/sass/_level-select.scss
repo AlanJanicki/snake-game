@@ -1,0 +1,55 @@
+.level-select {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-items: flex-start;
+
+  &__info {
+    align-self: center;
+    color: #c4a862;
+    font-size: 24px;
+  }
+
+  &__levels {
+    margin: 25px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    width: 80%;
+  }
+
+  &__level {
+    margin: 10px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #e6f4f1;
+    background: none;
+    font-size: 20px;
+    color: #001e88;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      border: 1px solid #7cfac3;
+      text-decoration: underline;
+      outline: 0;
+    }
+  }
+
+  &__back {
+    padding: 10px 15px;
+    background: none;
+    border: 1px solid #567b98;
+    color: #9dadbc;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      border: 1px solid #7cfac3;
+      text-decoration: underline;
+      outline: 0;
+    }
+  }
+}

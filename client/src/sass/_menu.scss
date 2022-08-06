@@ -1,0 +1,73 @@
+.menu {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+
+  &__controls {
+    display: grid;
+    align-content: flex-start;
+    justify-items: center;
+  }
+
+  &__logo {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  &__button {
+    margin: 20px 0;
+    width: 250px;
+    height: 50px;
+    border: 1px solid #a9ad9b;
+    background: none;
+    color: #c7d2db;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      border: 1px solid #7cfac3;
+      color: #7cfac3;
+      text-decoration: underline;
+      outline: 0;
+    }
+
+    &--user-logged-in {
+      margin: 4px 0;
+      border: none;
+      color: #8bafce;
+    }
+
+    &--play,
+    &--resume {
+      color: #fd3848;
+    }
+
+    &--in-game {
+      margin: 10px 0;
+      border: none;
+    }
+
+    &--open-game-menu {
+      position: absolute;
+      top: 0px;
+      right: 5px;
+      margin: 0;
+      width: 20px;
+      height: 20px;
+      color: #001e88;
+      border: none;
+
+      &--active {
+        color: #7cfac3;
+      }
+
+      &:hover,
+      &:focus {
+        border: 0;
+        outline: 0;
+        color: #7cfac3;
+      }
+    }
+  }
+}
