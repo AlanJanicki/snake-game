@@ -25,8 +25,7 @@ class Game extends Common {
     window.addEventListener('keydown', (e) => this.#handlePlayerPressKeys(e));
     this.setGameState(level);
     canvas.openCanvas();
-    this.#snake.length === 0 &&
-      Snake.generate({ x: SnakeData.INIT_OFFSET_X, y: SnakeData.INIT_OFFSET_Y }, Direction.RIGHT);
+    this.resetGame();
     this.#apple = new Apple();
     media.playBackgroundMusic();
     this.#handleGameEnd();
@@ -147,7 +146,7 @@ class Game extends Common {
           : collisionLeft
           ? SnakeData.INIT_OFFSET_X
           : snakeHeadX,
-        y: collisionDown ? CanvasCommon.HEIGHT : collisionTop ? TopBarOffset.Y : snakeHeadY,
+        y: collisionDown ? CanvasCommon.HEIGHT : collisionTop ? SPRITE_SIZE : snakeHeadY,
       },
       collisionRight
         ? Direction.LEFT

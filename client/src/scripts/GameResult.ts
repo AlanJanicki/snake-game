@@ -51,18 +51,24 @@ class GameResult extends Common {
 
   handlePlayerWin() {
     this.#clearResult();
-    if (User.userData && gameState.actualLevel < User.userData.gameLevel) {
-      this.#resultInfo.innerText = Information.WIN;
-      this.#resultIcon.classList.add(CssClass.RESULT_ICON_WIN);
-      this.#generateResultButton(
-        GameResultButton.PLAY_NEXT_LEVEL,
-        `${Information.PLAY_NEXT_LEVEL} ${gameState.actualLevel + 1}`
-      );
-    } else {
-      this.#resultInfo.innerText = Information.NEW_LEVEL_UNLOCKED;
-      this.#resultIcon.classList.add(CssClass.RESULT_ICON_WIN);
-      this.#handlePlayerUnlockNewLevel();
+    if (!User.userData) {
+      return;
     }
+
+    const isActualLevelLowerThanLastUnlocked = gameState.actualLevel < User.userData.gameLevel;
+
+    this.#resultInfo.innerText = isActualLevelLowerThanLastUnlocked
+      ? Information.WIN
+      : Information.NEW_LEVEL_UNLOCKED;
+    this.#resultIcon.classList.add(CssClass.RESULT_ICON_WIN);
+
+    isActualLevelLowerThanLastUnlocked
+      ? this.#generateResultButton(
+          GameResultButton.PLAY_NEXT_LEVEL,
+          `${Information.PLAY_NEXT_LEVEL} ${gameState.actualLevel + 1}`
+        )
+      : this.#handlePlayerUnlockNewLevel();
+
     media.playGameWinSound();
   }
 
@@ -88,7 +94,7 @@ class GameResult extends Common {
     button.addEventListener('click', () =>
       type === GameResultButton.PLAY_AGAIN
         ? this.#handlePlayMore()
-        : type === GameResultButton.PLAY_NEW_LEVEL
+        : type === GameResultButton.PLAY_NEXT_LEVEL
         ? this.#handlePlayMore(gameState.actualLevel + 1)
         : User.userData && this.#handlePlayMore(User.userData.gameLevel)
     );

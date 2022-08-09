@@ -241,7 +241,7 @@ class Form extends Common {
     const informations = document.querySelectorAll(
       `.${CssClass.FORM_ERROR}, .${CssClass.FORM_INFO}, .${CssClass.FORM_WARNING}`
     );
-    informations && informations.forEach((info) => info.remove());
+    informations?.forEach((info) => info.remove());
   }
 
   #handleHTTPRequestStatus(elementToAppendLoadingSpinner: HTMLButtonElement, mode: HttpRequest) {
