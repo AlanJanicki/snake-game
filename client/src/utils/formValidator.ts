@@ -12,15 +12,15 @@ const handleValidation = (
   maxLength?: number,
   secondValue?: string
 ) => {
+  if (typeof value === 'undefined') {
+    return;
+  }
+
   const errorFieldFormatted = errorField.charAt(0).toUpperCase() + errorField.slice(1);
   const passwordField =
     field === JsId.RF_PASSWORD_INPUT ||
     field === JsId.LF_PASSWORD_INPUT ||
     field === JsId.RF_PASSWORD_REPEATED_INPUT;
-
-  if (typeof value === 'undefined') {
-    return;
-  }
 
   if (maxLength && value.length === maxLength) {
     warnings.push({ [field]: Warning.MAX_LIMIT_OF_CHARACTERS });
