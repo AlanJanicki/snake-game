@@ -1,69 +1,84 @@
-import { Error, UserData, UserDataType } from '../models';
+import { Error, RequestValidationSchema, UserData, UserDataType } from '../models';
 
 const passRegex =
   /^(?=[^A-Z\n]*[A-Z])(?=[^a-z\n]*[a-z])(?=[^0-9\n]*[0-9])(?=[^#?!@$%^&*\n-]*[#?!@$%^&*-]).{8,20}$/;
 
 const handleValidation = (
-  value: string | number,
+  value: string | number | undefined,
   field: UserData,
   formatErrorField: string,
-  errorField: string = '',
-  secondValue?: string
+  errors: Partial<UserDataType>[],
+  errorField?: string,
+  secondValue?: string | number
 ) => {
-  const errors: Partial<UserDataType>[] = [];
-  const errorFieldFormatted = errorField.charAt(0).toUpperCase() + errorField.slice(1);
+  if (typeof value === 'undefined') {
+    return;
+  }
+
+  const errorFieldFormatted =
+    (errorField || '').charAt(0).toUpperCase() + (errorField || '').slice(1);
+  const passwordField = field === UserData.PASSWORD || field === UserData.PASSWORD_REPEATED;
 
   if (field === UserData.GAMELEVEL) {
     typeof value !== 'number' &&
       errors.push({ [`${field}`]: `${Error.INVALID_FORMAT} ${formatErrorField}` });
-
-    return errors;
+    return;
   }
 
   typeof value !== 'string'
     ? errors.push({ [field]: `${Error.INVALID_FORMAT} ${formatErrorField}` })
-    : field !== UserData.PASSWORD && field !== UserData.PASSWORD_REPEATED && value.trim().length < 3
+    : !passwordField && value.trim().length < 3
     ? errors.push({ [field]: `${errorFieldFormatted} ${Error.MIN_3_CHARACTERS}` })
-    : (field === UserData.PASSWORD || field === UserData.PASSWORD_REPEATED) &&
-      !value.match(passRegex)
+    : passwordField && !value.match(passRegex)
     ? errors.push({ [field]: `${errorFieldFormatted} ${Error.MUST_CONTAINS_SPECIFIC_ELEMENTS}` })
     : value.includes(' ')
     ? errors.push({ [field]: `${errorFieldFormatted} ${Error.NO_SPACE_ALLOWED}` })
     : field === UserData.PASSWORD_REPEATED &&
       value !== secondValue &&
       errors.push({ [field]: Error.PASSWORDS_DONT_MATCH });
-
-  return errors;
 };
 
-export const validateLoginInput = (
-  login: UserDataType[UserData.LOGIN],
-  password: UserDataType[UserData.PASSWORD]
-) => {
-  const loginErrors = handleValidation(login, UserData.LOGIN, 'loginu', 'login');
-  const passwordErrors = handleValidation(password, UserData.PASSWORD, 'hasła', 'hasło');
-  return [...loginErrors, ...passwordErrors];
-};
+export const validateRequests = (formData: Partial<UserDataType>) => {
+  const errors: Partial<UserDataType>[] = [];
 
-export const validateRegisterInput = (
-  login: UserDataType[UserData.LOGIN],
-  name: UserDataType[UserData.NAME],
-  password: UserDataType[UserData.PASSWORD],
-  passwordRepeated: UserDataType[UserData.PASSWORD_REPEATED]
-) => {
-  const nameErrors = handleValidation(name, UserData.NAME, 'imienia', 'Imię');
-  const loginErrors = validateLoginInput(login, password);
-  const repeatedPasswordErrors = handleValidation(
-    passwordRepeated,
-    UserData.PASSWORD_REPEATED,
-    'powtórzonego hasła',
-    'powtórzone hasło',
-    password
+  const validationSchema: RequestValidationSchema[] = [
+    {
+      field: UserData.LOGIN,
+      errorField: 'login',
+      formatErrorField: 'loginu',
+    },
+    {
+      field: UserData.PASSWORD,
+      errorField: 'hasło',
+      formatErrorField: 'hasła',
+    },
+    {
+      field: UserData.NAME,
+      errorField: 'imię',
+      formatErrorField: 'imienia',
+    },
+    {
+      field: UserData.PASSWORD_REPEATED,
+      errorField: 'powtórzone hasło',
+      formatErrorField: 'powtórzonego hasła',
+      secondField: UserData.PASSWORD,
+    },
+    {
+      field: UserData.GAMELEVEL,
+      formatErrorField: 'poziomu gry',
+    },
+  ];
+
+  validationSchema.forEach((schema) =>
+    handleValidation(
+      formData[schema.field as keyof typeof formData],
+      schema.field,
+      schema.formatErrorField,
+      errors,
+      schema.errorField,
+      schema.secondField && formData[schema.secondField as keyof typeof formData]
+    )
   );
 
-  return [...nameErrors, ...loginErrors, ...repeatedPasswordErrors];
-};
-
-export const validateGameLevel = (gameLevel: UserDataType[UserData.GAMELEVEL]) => {
-  return [...handleValidation(gameLevel, UserData.GAMELEVEL, 'poziomu gry')];
+  return errors;
 };

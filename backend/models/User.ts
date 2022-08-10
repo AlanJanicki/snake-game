@@ -22,6 +22,13 @@ export type UserDataType = UserProfile & {
   [UserData.PASSWORD_REPEATED]: string;
 };
 
+export type RequestValidationSchema = {
+  field: UserData;
+  errorField?: string;
+  formatErrorField: string;
+  secondField?: UserData;
+};
+
 const UserSchema = new Schema({
   [UserData.NAME]: {
     type: String,

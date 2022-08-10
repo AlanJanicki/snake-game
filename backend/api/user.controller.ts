@@ -4,7 +4,7 @@ import passport from 'passport';
 import { UserDao } from '../dao/';
 import { Error, Success, UserData, UserDataType, UserModel } from '../models/';
 
-import { validateGameLevel, validateLoginInput, validateRegisterInput } from '../utils/';
+import { validateRequests } from '../utils/';
 
 export class UserController {
   static async register(
@@ -13,7 +13,7 @@ export class UserController {
   ) {
     const { login, name, password, passwordRepeated } = req.body;
     try {
-      const validationErrors = validateRegisterInput(login, name, password, passwordRepeated);
+      const validationErrors = validateRequests({ login, name, password, passwordRepeated });
       if (validationErrors.length > 0) {
         res.status(400).json(validationErrors);
         return;
@@ -40,7 +40,7 @@ export class UserController {
   ) {
     const { login, password } = req.body;
 
-    const validationErrors = validateLoginInput(login, password);
+    const validationErrors = validateRequests({ login, password });
     if (validationErrors.length > 0) {
       res.status(400).json(validationErrors);
       return;
@@ -147,7 +147,7 @@ export class UserController {
     const { gameLevel } = req.body;
 
     try {
-      const validationErrors = validateGameLevel(gameLevel);
+      const validationErrors = validateRequests({ gameLevel });
       if (validationErrors.length > 0) {
         res.status(400).json(validationErrors);
         return;
