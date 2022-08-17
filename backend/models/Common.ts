@@ -32,7 +32,6 @@ export enum Url {
   GET = '/get',
   LOGIN = '/login',
   LOGOUT = '/logout',
-  ORIGIN = 'http://localhost:3500',
   REGISTER = '/register',
   UPDATE = '/update',
   USER = '/user',
