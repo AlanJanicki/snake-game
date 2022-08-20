@@ -81,48 +81,41 @@ class Settings extends Common {
     media.toggleSound();
   }
 
-  #decreaseMusicVolume() {
-    this.#increaseBackgroundMusicVolumeButton.disabled = false;
-    this.#increaseBackgroundMusicVolumeButton.classList.remove(CssClass.SOUND_DISABLED_BUTTON);
+  #toggleDisabledStatus(button: HTMLButtonElement, disabled: boolean) {
+    button.disabled = disabled;
+    disabled
+      ? button.classList.add(CssClass.SOUND_DISABLED_BUTTON)
+      : button.classList.remove(CssClass.SOUND_DISABLED_BUTTON);
+  }
 
+  #decreaseMusicVolume() {
+    this.#toggleDisabledStatus(this.#increaseBackgroundMusicVolumeButton, false);
     media.decreaseMusicVolume();
-    if (media.musicVolume === 0) {
-      this.#decreaseBackgroundMusicVolumeButton.disabled = true;
-      this.#decreaseBackgroundMusicVolumeButton.classList.add(CssClass.SOUND_DISABLED_BUTTON);
-    }
+
+    media.musicVolume === 0 &&
+      this.#toggleDisabledStatus(this.#decreaseBackgroundMusicVolumeButton, true);
   }
 
   #decreaseSoundVolume() {
-    this.#increaseSoundVolumeButton.disabled = false;
-    this.#increaseSoundVolumeButton.classList.remove(CssClass.SOUND_DISABLED_BUTTON);
-
+    this.#toggleDisabledStatus(this.#increaseSoundVolumeButton, false);
     media.decreaseSoundVolume();
-    if (media.soundVolume === 0) {
-      this.#decreaseSoundVolumeButton.disabled = true;
-      this.#decreaseSoundVolumeButton.classList.add(CssClass.SOUND_DISABLED_BUTTON);
-    }
+
+    media.soundVolume === 0 && this.#toggleDisabledStatus(this.#decreaseSoundVolumeButton, true);
   }
 
   #increaseMusicVolume() {
-    this.#decreaseBackgroundMusicVolumeButton.disabled = false;
-    this.#decreaseBackgroundMusicVolumeButton.classList.remove(CssClass.SOUND_DISABLED_BUTTON);
-
+    this.#toggleDisabledStatus(this.#decreaseBackgroundMusicVolumeButton, false);
     media.increaseMusicVolume();
-    if (media.musicVolume === 1) {
-      this.#increaseBackgroundMusicVolumeButton.disabled = true;
-      this.#increaseBackgroundMusicVolumeButton.classList.add(CssClass.SOUND_DISABLED_BUTTON);
-    }
+
+    media.musicVolume === 1 &&
+      this.#toggleDisabledStatus(this.#increaseBackgroundMusicVolumeButton, true);
   }
 
   #increaseSoundVolume() {
-    this.#decreaseSoundVolumeButton.disabled = false;
-    this.#decreaseSoundVolumeButton.classList.remove(CssClass.SOUND_DISABLED_BUTTON);
-
+    this.#toggleDisabledStatus(this.#decreaseSoundVolumeButton, false);
     media.increaseSoundVolume();
-    if (media.soundVolume === 1) {
-      this.#increaseSoundVolumeButton.disabled = true;
-      this.#increaseSoundVolumeButton.classList.add(CssClass.SOUND_DISABLED_BUTTON);
-    }
+
+    media.soundVolume === 1 && this.#toggleDisabledStatus(this.#increaseSoundVolumeButton, true);
   }
 }
 

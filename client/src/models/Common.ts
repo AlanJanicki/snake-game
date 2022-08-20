@@ -168,6 +168,11 @@ export enum Visibility {
   SHOW = 'SHOW',
 }
 
+export enum VolumeAction {
+  DECREASE = 'DECREASE',
+  INCREASE = 'INCREASE',
+}
+
 export enum Warning {
   MAX_LIMIT_OF_CHARACTERS = 'Osiągnięto maksymalną liczbę znaków',
 }

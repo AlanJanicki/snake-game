@@ -1,4 +1,5 @@
 import { Common, modal } from './index';
+import { VolumeAction } from '../models';
 
 class Media extends Common {
   #appleSprite: HTMLImageElement;
@@ -31,53 +32,68 @@ class Media extends Common {
     super();
   }
 
+  #getGameSounds() {
+    return [
+      this.#gameDefeatSound,
+      this.#snakeMoveSound,
+      this.#hitAppleSound,
+      this.#snakeCollisionSound,
+    ];
+  }
+
   #resetAudioElement(element: HTMLAudioElement) {
     !element.paused && element.pause();
     element.currentTime = 0;
   }
 
+  #handleVolume(
+    action: VolumeAction,
+    volume: number,
+    elements: HTMLAudioElement[],
+    setVolume: (volume: number) => void
+  ) {
+    const isIncreasing = action === VolumeAction.INCREASE;
+    const newVolume = isIncreasing ? (volume += 0.1) : (volume -= 0.1);
+    const volumeToSet = parseFloat(newVolume.toFixed(2));
+
+    setVolume(volumeToSet);
+    elements.forEach((el) => (el.volume = volume));
+  }
+
   increaseMusicVolume() {
-    this.#musicVolume += 0.1;
-    if (this.#musicVolume > 1) {
-      this.#musicVolume = 1;
-      return;
-    }
-    this.#backgroundMusic.volume = this.#musicVolume;
+    this.#handleVolume(
+      VolumeAction.INCREASE,
+      this.#musicVolume,
+      [this.#backgroundMusic],
+      this.#setMusicVolume.bind(this)
+    );
   }
 
   decreaseMusicVolume() {
-    this.#musicVolume -= 0.1;
-    if (this.#musicVolume < 0.11) {
-      this.#musicVolume = 0;
-      return;
-    }
-    this.#backgroundMusic.volume = this.#musicVolume;
+    this.#handleVolume(
+      VolumeAction.DECREASE,
+      this.#musicVolume,
+      [this.#backgroundMusic],
+      this.#setMusicVolume.bind(this)
+    );
   }
 
   increaseSoundVolume() {
-    this.#soundVolume += 0.1;
-    if (this.#soundVolume > 1) {
-      this.#soundVolume = 1;
-      return;
-    }
-    this.#gameDefeatSound.volume = this.#soundVolume;
-    this.#gameWinSound.volume = this.#soundVolume;
-    this.#snakeMoveSound.volume = this.#soundVolume;
-    this.#hitAppleSound.volume = this.#soundVolume;
-    this.#snakeCollisionSound.volume = this.#soundVolume;
+    this.#handleVolume(
+      VolumeAction.INCREASE,
+      this.#soundVolume,
+      this.#getGameSounds(),
+      this.#setSoundVolume.bind(this)
+    );
   }
 
   decreaseSoundVolume() {
-    this.#soundVolume -= 0.1;
-    if (this.#soundVolume < 0.11) {
-      this.#soundVolume = 0;
-      return;
-    }
-    this.#gameDefeatSound.volume = this.#soundVolume;
-    this.#gameWinSound.volume = this.#soundVolume;
-    this.#snakeMoveSound.volume = this.#soundVolume;
-    this.#hitAppleSound.volume = this.#soundVolume;
-    this.#snakeCollisionSound.volume = this.#soundVolume;
+    this.#handleVolume(
+      VolumeAction.DECREASE,
+      this.#soundVolume,
+      this.#getGameSounds(),
+      this.#setSoundVolume.bind(this)
+    );
   }
 
   playBackgroundMusic() {
@@ -271,6 +287,10 @@ class Media extends Common {
     this.#hitAppleSound.volume = this.#soundVolume;
   }
 
+  #setMusicVolume(volume: number) {
+    this.#musicVolume = volume;
+  }
+
   set snakeCollisionSound(src) {
     this.#snakeCollisionSound = src;
     this.#snakeCollisionSound.volume = this.#soundVolume;
@@ -335,6 +355,10 @@ class Media extends Common {
 
   set snakeTailUpSprite(src) {
     this.#snakeTailUpSprite = src;
+  }
+
+  #setSoundVolume(volume: number) {
+    this.#soundVolume = volume;
   }
 }
 
