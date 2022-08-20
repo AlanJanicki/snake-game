@@ -33,8 +33,11 @@ app.use(
       autoRemove: 'interval',
       autoRemoveInterval: 30,
     }),
+    proxy: true,
     cookie: {
       maxAge: 6 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: 'none',
     },
   })
 );

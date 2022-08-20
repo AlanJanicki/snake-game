@@ -83,7 +83,6 @@ class Form extends Common {
   }
 
   closeForm() {
-    this.#formType = null;
     this.changeVisibility([
       [this.#loginForm, Visibility.HIDE],
       [this.#registerForm, Visibility.HIDE],
