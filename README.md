@@ -24,7 +24,7 @@
 [![Product Name Screen Shot][product-screenshot1]](https://zealous-hugle-26c9fa.netlify.app/)
 [![Product Name Screen Shot][product-screenshot2]](https://zealous-hugle-26c9fa.netlify.app/)
 
-Simple snake game, made with Typescript. Player controls a snake, which roams around on a bordered plane, picking up apple, trying to avoid hitting its own tail or the edges of the playing area. Each time snake eats apple, it grows longer and player gets points. When amount of points is big enough, new level is unlocked and snake roams faster.
+Simple snake game, made with Typescript. Player controls a snake, which roams around on a bordered board, picking up apple, trying to avoid hitting its own tail or the edges of the playing area. Each time snake eats apple, it grows longer and player gets points. When amount of points is big enough, new level is unlocked and snake roams faster.
 Game is controlled by the keyboard, therefore it's intended for computers (app scaling for different screen sizes is handled by simple css transform).
 
 <!-- BUILT WITH -->
